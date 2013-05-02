@@ -6,8 +6,7 @@
 class iptables::params  {
 
   ### Definition of some variables used in the module
-  $osver = split($::operatingsystemrelease, '[.]')
-  $osver_maj = $osver[0]
+  $osver_maj = $::operatingsystemmajrelease
 
   $enable_v6 = false
 
@@ -18,51 +17,51 @@ class iptables::params  {
 # "concat" - To build them up using different fragments
 #      - This option, set as default, permits the use of the iptables::rule define
 #      - and many other funny things
-  $config = 'concat'
+  $config = hiera('iptables::config','concat')
 
 # Define what to do with unknown packets
-  $block_policy = 'DROP'
+  $block_policy = hiera('iptables::block_policy','DROP')
 
 # Define what to do with icmp packets (quick'n'dirty approach)
-  $icmp_policy = 'ACCEPT'
+  $icmp_policy = hiera('iptables::icmp_policy','ACCEPT')
 
 # Define what to do with output packets
-  $output_policy = 'ACCEPT'
+  $output_policy = 'ACCEPT')
 
 ## Define what packets to log
-  $log = 'drop'
-  $log_input = ''
-  $log_output = ''
-  $log_forward = ''
+  $log = hiera('iptables::log','drop')
+  $log_input = hiera('iptables::log_input','')
+  $log_output = hiera('iptables::log_output','')
+  $log_forward = hiera('iptables::log_forward','')
 
 # Define the Level of logging (numeric or see syslog.conf(5))
-  $log_level = '4'
+  $log_level = hiera('iptables::log_level','4')
 
 # Define if you want to open SSH port by default
-  $safe_ssh = true
+  $safe_ssh = hiera('iptables::safe_ssh',true)
 
 # Define what to do with INPUT broadcast packets
-  $broadcast_policy = 'accept'
+  $broadcast_policy = hiera('iptables::broadcast_policy','accept')
 
 # Define what to do with INPUT multicast packets
-  $multicast_policy = 'accept'
+  $multicast_policy = hiera('iptables::multicast_policy','accept')
 
 ## MODULE INTERNAL VARIABLES
 # (Modify to adapt to unsupported OSes)
 
-  $package = $::operatingsystem ? {
+  $package = hiera('iptables::package',$::operatingsystem ? {
     default => 'iptables',
-  }
+  })
 
-  $service = $::operatingsystem ? {
+  $service = hiera('iptables::service',$::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => 'iptables-persistent',
     default                   => 'iptables',
-  }
+  })
 
-  $service_status = $::operatingsystem ? {
+  $service_status = hiera('iptables::service_status',$::operatingsystem ? {
     /(?i:Debian|Ubuntu|Mint)/ => false,
     default                   => true,
-  }
+  })
 
   case $::operatingsystem {
     /(?i:Debian)/: {
@@ -92,28 +91,31 @@ class iptables::params  {
     }
   }
 
-  $config_file_mode = $::operatingsystem ? {
+  $config_file_mode = hiera('iptables::config_file_mode',$::operatingsystem ? {
     default => '0640',
-  }
+  })
 
-  $config_file_owner = $::operatingsystem ? {
+  $config_file_owner = hiera('iptables::config_file_owner',$::operatingsystem ? {
     default => 'root',
-  }
+  })
 
-  $config_file_group = $::operatingsystem ? {
+  $config_file_group = hiera('iptables::config_file_group',$::operatingsystem ? {
     default => 'root',
-  }
+  })
 
-  $my_class = ''
-  $source = ''
-  $template = ''
-  $service_autorestart = true
-  $version = 'present'
-  $absent = false
-  $disable = false
-  $disableboot = false
-  $debug = false
-  $audit_only = false
+  $default_rules = {}
+  $rule_defaults = {}
+  
+  $my_class = hiera('iptables::my_class','')
+  $source = hiera('iptables::source','')
+  $template = hiera('iptables::template','')
+  $service_autorestart = hiera('iptables::service_autorestart',true)
+  $version = hiera('iptables::version','present')
+  $absent = hiera('iptables::absent',false)
+  $disable = hiera('iptables::disable',false)
+  $disableboot = hiera('iptables::disableboot',false)
+  $debug = hiera('iptables::debug',false)
+  $audit_only = hiera('iptables::audit_only',false)
 
   ## FILE SERVING SOURCE
   case $::base_source {
@@ -126,5 +128,14 @@ class iptables::params  {
     }
     default: { $general_base_source = $::base_source }
   }
+
+
+  $bool_service_autorestart = any2bool($service_autorestart)
+  $bool_absent = any2bool($absent)
+  $bool_disable = any2bool($disable)
+  $bool_disableboot = any2bool($disableboot)
+  $bool_debug = any2bool($debug)
+  $bool_audit_only = any2bool($audit_only)
+
 
 }

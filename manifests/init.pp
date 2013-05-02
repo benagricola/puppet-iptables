@@ -6,45 +6,7 @@
 # Usage:
 # include iptables
 #
-class iptables (
-  $my_class            = params_lookup( 'my_class' ),
-  $config              = params_lookup( 'config' ),
-  $source              = params_lookup( 'source' ),
-  $template            = params_lookup( 'template' ),
-  $service_autorestart = params_lookup( 'service_autorestart' , 'global' ),
-  $block_policy        = params_lookup( 'block_policy' ),
-  $icmp_policy         = params_lookup( 'icmp_policy' ),
-  $output_policy       = params_lookup( 'output_policy' ),
-  $broadcast_policy    = params_lookup( 'broadcast_policy' ),
-  $multicast_policy    = params_lookup( 'multicast_policy' ),
-  $log                 = params_lookup( 'log' ),
-  $log_input           = params_lookup( 'log_input' ),
-  $log_output          = params_lookup( 'log_output' ),
-  $log_forward         = params_lookup( 'log_forward' ),
-  $log_level           = params_lookup( 'log_level' ),
-  $safe_ssh            = params_lookup( 'safe_ssh' ),
-  $package             = params_lookup( 'package' ),
-  $version             = params_lookup( 'version' ),
-  $service             = params_lookup( 'service' ),
-  $service_status      = params_lookup( 'service_status' ),
-  $config_file         = params_lookup( 'config_file' ),
-  $config_file_mode    = params_lookup( 'config_file_mode' ),
-  $config_file_owner   = params_lookup( 'config_file_owner' ),
-  $config_file_group   = params_lookup( 'config_file_group' ),
-  $absent              = params_lookup( 'absent' ),
-  $disable             = params_lookup( 'disable' ),
-  $disableboot         = params_lookup( 'disableboot' ),
-  $debug               = params_lookup( 'debug' , 'global' ),
-  $enable_v6           = params_lookup( 'enable_v6', 'global' ),
-  $audit_only          = params_lookup( 'audit_only' , 'global' )
-  ) inherits iptables::params {
-
-  $bool_service_autorestart = any2bool($service_autorestart)
-  $bool_absent = any2bool($absent)
-  $bool_disable = any2bool($disable)
-  $bool_disableboot = any2bool($disableboot)
-  $bool_debug = any2bool($debug)
-  $bool_audit_only = any2bool($audit_only)
+class iptables inherits iptables::params {
 
   ### Definitions of specific variables
   $real_block_policy = $block_policy ? {
