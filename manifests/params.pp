@@ -26,7 +26,7 @@ class iptables::params  {
   $icmp_policy = hiera('iptables::icmp_policy','ACCEPT')
 
 # Define what to do with output packets
-  $output_policy = 'ACCEPT')
+  $output_policy = hiera('iptables::output_policy','ACCEPT')
 
 ## Define what packets to log
   $log = hiera('iptables::log','drop')
@@ -105,7 +105,7 @@ class iptables::params  {
 
   $default_rules = {}
   $rule_defaults = {}
-  
+
   $my_class = hiera('iptables::my_class','')
   $source = hiera('iptables::source','')
   $template = hiera('iptables::template','')
