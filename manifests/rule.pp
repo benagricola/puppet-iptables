@@ -73,9 +73,17 @@ define iptables::rule (
     default => "-p ${protocol}",
   }
 
+  $multiport = is_array($port) ? {
+    false =>  '',
+    true  => '-m multiport',
+  }
+
   $true_port = $port ? {
-    ''    => '',
-    default => "--dport ${port}",
+    ''      => '',
+    default => is_array($port) ? {
+      false   =>  "--dport ${port}",
+      true    =>  inline_template('--dports <%= scope.lookupvar("port").join(",") %>')
+    }
   }
 
   $true_source = $source ? {
