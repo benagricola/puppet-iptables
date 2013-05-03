@@ -8,7 +8,7 @@ class iptables::params  {
   ### Definition of some variables used in the module
   $osver_maj = $::operatingsystemmajrelease
 
-  $enable_v6 = false
+  $enable_v6 =  hiera('iptables::enable_v6',false)
 
 ## DEFAULTS FOR VARIABLES USERS CAN SET
 
