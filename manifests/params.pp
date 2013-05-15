@@ -117,7 +117,11 @@ class iptables::params  {
 
   # From Hash Settings
   $rules = {}
-  $rule_defaults = {}
+  $exported_rules = {}
+  $collect_tag = undef
+  $rule_defaults = {
+    tag => 'default',
+  }
 
   ## FILE SERVING SOURCE
   case $::base_source {
