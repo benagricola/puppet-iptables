@@ -118,7 +118,7 @@ class iptables::params  {
   # From Hash Settings
   $rules = {}
   $exported_rules = {}
-  $collect_tag = undef
+  $collect_tag = ''
   $rule_defaults = {
     tag => 'default',
   }
