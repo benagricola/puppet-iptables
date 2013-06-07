@@ -141,24 +141,29 @@ define iptables::rule (
     }
   }
 
+  $true_rule = $rule != '' ? {
+    true => $rule,
+    default => template('iptables/concat/rule.erb'),
+  }
+
   concat::fragment{ "iptables_rule_$name":
     target  => $iptables::config_file,
-    content => $rule != '' ? {
-      true => $rule,
-      default => template('iptables/concat/rule.erb'),
-    },
+    content => $true_rule,
     order   => $true_order,
     ensure  => $ensure,
     notify  => Service['iptables'],
   }
   
   if $enable_v6 {
+
+    $true_rule_ipv6 = $rule != '' ? {
+      true    => $rule,
+      default => template('iptables/concat/rule_v6.erb'),
+    }
+
     concat::fragment{ "iptables_rule_v6_$name":
       target  => $iptables::config_file_v6,
-      content => $rule != '' ? {
-      true => $rule,
-      default => template('iptables/concat/rule_v6.erb'),
-    },
+      content => $true_rule_ipv6,
       order   => $true_order,
       ensure  => $ensure,
       notify  => Service['iptables'],
