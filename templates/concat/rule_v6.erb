@@ -1,5 +1,5 @@
 <% if scope.lookupvar('rule') != '' -%>
-<% scope.lookupvar('rule') %>
+<%= scope.lookupvar('rule') %>
 <% else -%>
 <% if scope.lookupvar('array_source_v6').length > 0 -%>
 <% scope.lookupvar('array_source_v6').each do |s| -%>
