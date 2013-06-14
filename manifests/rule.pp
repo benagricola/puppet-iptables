@@ -144,7 +144,10 @@ define iptables::rule (
 
   concat::fragment{ "iptables_rule_$name":
     target  => $iptables::config_file,
-    content => template('iptables/concat/rule.erb'),
+    content => $rule ? {
+      ''      => template('iptables/concat/rule.erb'),
+      default => "${rule}\n",
+    },
     order   => $true_order,
     ensure  => $ensure,
     notify  => Service['iptables'],
@@ -154,7 +157,10 @@ define iptables::rule (
 
     concat::fragment{ "iptables_rule_v6_$name":
       target  => $iptables::config_file_v6,
-      content => template('iptables/concat/rule_v6.erb'),
+      content => $rule ? {
+        ''      => template('iptables/concat/rule_v6.erb'),
+        default => "${rule}\n",
+      },
       order   => $true_order,
       ensure  => $ensure,
       notify  => Service['iptables'],
